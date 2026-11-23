@@ -41,9 +41,9 @@
 | ---- | ------- | --------------------- | ---------------- | --------------------------- | ------------------- | ------------- |
 | 1 | Piso temporal | Datas absurdas contaminariam séries | `DATA_MIN = 2000-01-01` em todas as colunas temporais | O ano de 2010 é muito recente para lojas, 2000 é um período maior e mais realista. | 0 linhas removidas | — |
 | 2 | Nulos em `orders.order_approved_at` | 14 pedidos com status que exige aprovação, sem `approved_at` | Remover os pedidos | Poucos pedidos, e possuem estados inválidos | 14 linhas (0,014%) | 3 |
-| 2-b | Outras invalidezes em `orders` | Inconsistências temporais e de status não cobertas pela Decisão 2 | Remoção via `mask_ruim` (regras detalhadas na seção 3) | ⚠️ [você — resumo de 1 linha] | 1.391 linhas (1,399%) | 3 |
+| 2-b | Outras invalidezes em `orders` | Inconsistências temporais e de status não cobertas pela Decisão 2 | Remoção via `mask_ruim` (regras detalhadas na seção 3) | Remoção de dados que não valeriam a pena recuperar.| 1.391 linhas (1,399%) | 3 |
 | 3 | `order_id` com múltiplos reviews | 1.098 `order_id` (~1,11%) em >1 review | Mantidas todas; `flag_order_multi_review`; agregação delegada à Frente 2 | Pode ser regra de negócio, como edições | 0 removidas; 1.098 sinalizadas | 4 |
-| 3-b | Outras invalidezes em `reviews` | Score fora do domínio, resposta antes da criação, PK duplicada, datas inválidas | Remoção via `mask_ruim` (regras detalhadas na seção 3) | ⚠️ [você — resumo de 1 linha] | 814 linhas (0,820%) | 4 |
+| 3-b | Outras invalidezes em `reviews` | Score fora do domínio, resposta antes da criação, PK duplicada, datas inválidas | Remoção via `mask_ruim` (regras detalhadas na seção 3) | Remoção de dados que não valeriam a pena recuperar. | 814 linhas (0,820%) | 4 |
 | 4 | `order_items` aderente | Nenhuma invalidez dura detectada | Apenas cast de tipos + strip | Não foi necessário retirar linhas — base já sem valores impossíveis; só normalização | 0 removidas (0,000%) | 2 |
 | 5 | Outliers em `price` / `freight_value` | IA sugeriu remoção via `Q3+3IQR` | **Rejeitada.** Nenhuma remoção | Outliers não são necessariamente erros — podem ser pedidos reais, promoções, itens de alto valor (ver Decisão 5) | 0 removidas | **1** |
 | 6 | Nulos em `reviews.review_comment_title` / `_message` | 88% / 59% de nulos respectivos | Mantidos como `pd.NA`; strings vazias → `NA` | Apenas ausência de comentários, não torna os dados inválidos | 0 removidas | 4 |
@@ -117,20 +117,7 @@
 
 **Justificativa:** Tais linhas são irrecuperáveis , e pela quantidade de 1.413%, não valendo a pena serem inferidas.
 
-**Impacto nos dados:** 1.391 linhas (1,399%) removidas, distribuídas conforme tabela abaixo.
-
-| Regra | Linhas |
-| ------- | -------- |
-| `order_id`/`customer_id` vazio | ⚠️ [colar] |
-| `order_status` fora do domínio | ⚠️ [colar] |
-| `order_purchase_timestamp` nulo ou < 2000 | ⚠️ [colar] |
-| `approved_at` < `purchase` | ⚠️ [colar] |
-| `carrier_date` < `purchase` | ⚠️ [colar] |
-| `carrier_date` < `approved_at` | ⚠️ [colar] |
-| `customer_date` < `carrier_date` | ⚠️ [colar] |
-| `customer_date` < `purchase` | ⚠️ [colar] |
-| `delivered` sem `carrier` ou `customer` | ⚠️ [colar] |
-| (soma combinada única — sem sobreposição) | 1.391 |
+**Impacto nos dados:** 1.391 linhas (1,399%) removidas.
 
 ---
 
@@ -177,20 +164,7 @@
 
 **Justificativa:** Pela quantidade extremamente diminuta de dados inválidos, apenas 0.820%, portanto, podendo ser deletadas sem afetar as conclusões.
 
-**Impacto nos dados:** 814 linhas (0,820%) removidas, distribuídas conforme tabela abaixo.
-
-| Regra | Linhas |
-| ------- | -------- |
-| `review_id`/`order_id` vazio | ⚠️ [colar] |
-| `review_score` fora de `{1..5}` | ⚠️ [colar] |
-| `review_score` nulo | ⚠️ [colar] |
-| `review_creation_date` nula/inválida/<2000 | ⚠️ [colar] |
-| `review_answer_timestamp` nulo/inválido/<2000 | ⚠️ [colar] |
-| `review_answer_timestamp` < `review_creation_date` | ⚠️ [colar] |
-| `review_id` duplicado | ⚠️ [colar] |
-| (soma combinada única — sem sobreposição) | 814 |
-
-
+**Impacto nos dados:** 814 linhas (0,820%) removidas.
 ---
 
 ### Decisão 4 — `order_items` aderente
