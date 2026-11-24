@@ -74,8 +74,8 @@
 
 **Alternativas descartadas:**
 
-- `DATA_MIN = 2010` — ⚠️ [por que descartou]
-- `DATA_MIN = min(data)` do próprio dataset — ⚠️ [por que descartou]
+- `DATA_MIN = 2010` — Intervalo muito curto de tempo
+- `DATA_MIN = min(data)` do próprio dataset — Se houvesse, no futuro, tempos menores que o mínimo atual, poderia quebrar o pipeline, e deixar um tempo estático ajuda na visualização.
 
 ---
 
