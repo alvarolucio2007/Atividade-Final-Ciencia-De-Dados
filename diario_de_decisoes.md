@@ -3,8 +3,8 @@
 **Projeto:** Ciência de Dados
 **Integrantes da Frente 1:** Álvaro Lúcio
 **Data de início:** 23/11/2026
-**Última atualização:** 23/11/2026
-**Versão:** v2
+**Última atualização:** 24/11/2026
+**Versão:** v3
 
 ---
 
