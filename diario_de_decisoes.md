@@ -8,7 +8,7 @@
 
 **Última atualização:** 24/11/2026
 
-**Versão:** v3
+**Versão:** v4
 
 ---
 
@@ -35,7 +35,6 @@
 | `olist_order_items` | 112.650 | 112.650 | 0% |
 | `olist_products` | 32.951 | 32.951 | 0%* |
 
-\* Recebidas 65.902 em memória por import duplicado (ver Decisão 8); removidas 32.951 duplicatas antes da entrega.
 
 ---
 
@@ -51,7 +50,8 @@
 | 4 | `order_items` aderente | Nenhuma invalidez dura detectada | Apenas cast de tipos + strip | Não foi necessário retirar linhas — base já sem valores impossíveis; só normalização | 0 removidas (0,000%) | 2 |
 | 5 | Outliers em `price` / `freight_value` | IA sugeriu remoção via `Q3+3IQR` | **Rejeitada.** Nenhuma remoção | Outliers não são necessariamente erros — podem ser pedidos reais, promoções, itens de alto valor (ver Decisão 5) | 0 removidas | **1** |
 | 6 | Nulos em `reviews.review_comment_title` / `_message` | 88% / 59% de nulos respectivos | Mantidos como `pd.NA`; strings vazias → `NA` | Apenas ausência de comentários, não torna os dados inválidos | 0 removidas | 4 |
-| 7 | Erro `ValueError` em `limpar_orders` | `Can only compare identically-labeled Series` ao calcular flags após filtro | Reordenado: flags antes do filtro + `reset_index` inicial | Erro de sintaxe no Pandas após geração de código com IA | Correção de código | **6** |
+| 7 | Erro `ValueError` em `limpar_orders` | `Can only compare identically-labeled Series` ao calcular flags após filtro | Reordenado: flags antes do filtro + `reset_index` inicial | Erro de runtime no Pandas após geração de código com IA | Correção de código | **6** |
+
 
 ---
 
@@ -115,7 +115,7 @@
 
 **Problema encontrado:** Além dos 14 casos da Decisão 2, a `mask_ruim` remove linhas por outras 8 regras de invalidez dura (timestamps invertidos, `delivered` sem data, status fora do domínio, etc.).
 
-**Como foi detectado:** Decomposição individual de cada regra da `mask_ruim`.
+**Como foi detectado:** Auditoria via `mask_ruim` combinada: detecção de timestamps invertidos, `delivered` sem data de entrega e status fora do domínio.
 
 **Decisão:** Aplicar a `mask_ruim` completa, removendo linhas que violam qualquer regra dura.
 
@@ -162,7 +162,7 @@
 
 **Problema encontrado:** Além das decisões 3 e 6, a `mask_ruim` de reviews remove linhas por `review_score` fora de `{1..5}`, `review_answer_timestamp < review_creation_date`, `review_id` duplicado, IDs vazios, datas inválidas.
 
-**Como foi detectado:** Decomposição individual de cada regra da `mask_ruim`.
+**Como foi detectado:** Auditoria via `mask_ruim`: `review_score` fora de `{1..5}`, resposta antes da criação, `review_id` duplicado, IDs vazios e datas inválidas.
 
 **Decisão:** Aplicar a `mask_ruim` completa, removendo linhas que violam qualquer regra dura.
 
@@ -247,5 +247,11 @@
 | `reviews` | `flag_order_multi_review` | `order_id` com >1 review | Agregar por pedido? |
 | `order_items` | (nenhuma) | — | — |
 | `products` | (nenhuma) | — | — |
+
+## 5. Entregáveis
+
+- 4 DataFrames limpos com `datetime64` nas colunas temporais
+- 5 colunas `flag_*` para análise (ver seção 4)
+- `uso_de_ia.md` com 7 registros + 2 casos de IA inadequada
 
 ---
