@@ -17,6 +17,8 @@
 | 4 | 23/11/2026 | Álvaro Lúcio | DeepSeek | Pipelines de auditoria e limpeza para `order_reviews` | Estrutura de `auditar_reviews` e `limpar_reviews`; normalização de strings vazias em `title`/`message`; `flag_order_multi_review` | Revisado; mantidas as 1.098 linhas com `order_id` multi-review (decisão de modelagem delegada à Frente 2) | [https://chat.deepseek.com/share/37svfdmrhp9niu97ll](https://chat.deepseek.com/share/37svfdmrhp9niu97ll) |
 | 5 | 23/11/2026 | Álvaro Lúcio | DeepSeek | Pipelines de auditoria e limpeza para `products` | Estrutura de `auditar_products` e `limpar_products`; `drop_duplicates` por `product_id` | Revisado; detecção e correção de import duplicado (65.902 → 32.951 linhas) | [https://chat.deepseek.com/share/37svfdmrhp9niu97ll](https://chat.deepseek.com/share/37svfdmrhp9niu97ll) |
 | 6 | 23/11/2026 | Álvaro Lúcio | DeepSeek | Diagnóstico e correção de `ValueError: Can only compare identically-labeled Series objects` em `limpar_orders` | Diagnóstico da causa (flags calculadas após `reset_index`, reusando Series do `df` original) e reordenação do pipeline (flags → filtro → dedup) | Revisado; correção aplicada no código; risco identificado: em versões antigas do pandas, comparação por label poderia ter atribuído flags ao pedido errado silenciosamente | [https://chat.deepseek.com/share/37svfdmrhp9niu97ll](https://chat.deepseek.com/share/37svfdmrhp9niu97ll)|
+| 7 | 23/11/2026 | Álvaro Lúcio | DeepSeek | Revisão de português e formatação de READMEs do projeto | Correções gramaticais e ajuste de clareza em trechos escritos pela equipe | Revisado; nenhum conteúdo novo (conclusões, justificativas, sumário) foi gerado por IA nos READMEs | [https://chat.deepseek.com/share/aag81bstpuxnimcc77](https://chat.deepseek.com/share/aag81bstpuxnimcc77) |
+
 
 ---
 
@@ -66,6 +68,7 @@
 | 4 | `order_reviews` | Decisões 3, 3-b, 6 |
 | 5 | `products` | Decisão 8 |
 | 6 | `orders` (fix) | Decisão 7 |
+| 7 | (READMEs) | — (não é decisão de dados; registro de transparência) |
 
 ---
 
