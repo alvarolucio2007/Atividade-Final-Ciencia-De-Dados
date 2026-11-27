@@ -46,3 +46,23 @@
 | 3   |   1   | Quantidade, comprimento, descrição, largura e altura inválidos (nulos ou iguais a 0) em `products`. | Drop de todas as linhas que possuem esses valores errados. | São valores logicamente impossíveis, e são menos de 2% dos dados.                          | Redução no tamanho total do dataframe. |
 
 ---
+
+# Diário de Decisões — Frente 2 transformações (codificação, normalização, seleção de atributos) e
+feature engineering;
+
+**Responsável:** Leticia Leandro\
+**Data de início:** 26/11/2026
+
+**Última atualização:** 27/11/2026
+
+
+| Nº | Etapa                  | Problema encontrado                                              | Decisão tomada                                                           | Justificativa                                                              | Impacto nos dados                                                                                                               |
+| -- | ---------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 1  | Codificação categórica | Categorias dos produtos estavam em formato textual.              | Aplicação do One-Hot Encoding, com `drop_first=True`.                    | Transformar as categorias em valores numéricos para facilitar as análises. | Criação de colunas binárias com prefixo `categoria_`.                                                                           |
+| 2  | Normalização           | Variáveis numéricas apresentavam escalas diferentes.             | Aplicação do método Min-Max.                                             | Colocar os valores em uma escala de 0 a 1.                                 | Criação de quatro colunas: `price_minmax`, `freight_value_minmax`, `frete_percentual_preco_minmax` e `valor_total_item_minmax`. |
+| 3  | Padronização           | Variáveis numéricas apresentavam médias e dispersões diferentes. | Aplicação do método Z-Score.                                             | Facilitar a comparação entre variáveis considerando média e desvio-padrão. | Criação de quatro colunas padronizadas com sufixo `_zscore`.                                                                    |
+| 4  | Seleção de atributos   | Existiam diversas informações nas quatro bases utilizadas.       | Seleção das colunas necessárias para a análise e cruzamento das tabelas. | Manter os dados relevantes para estudar entregas, avaliações e fretes.     | Integração de informações de pedidos, itens, produtos e avaliações.                                                             |
+| 5  | Feature Engineering    | Necessidade de identificar pedidos entregues com atraso.         | Criação da variável `pedido_atrasado`.                                   | Identificar se a entrega aconteceu depois da data estimada.                | Criação de uma coluna indicadora: 1 para atraso e 0 para entrega no prazo.                                                      |
+| 6  | Feature Engineering    | Necessidade de identificar avaliações negativas dos clientes.    | Criação da variável `avaliacao_baixa`.                                   | Identificar avaliações com notas iguais ou inferiores a 2.                 | Criação de uma coluna indicadora para avaliações baixas.                                                                        |
+| 7  | Feature Engineering    | Necessidade de analisar o peso do frete no preço dos produtos.   | Criação da variável `frete_percentual_preco`.                            | Calcular a porcentagem do preço que corresponde ao frete.                  | Criação de uma coluna com o percentual do frete em relação ao preço.                                                            |
+| 8  | Feature Engineering    | Necessidade de conhecer o custo total de cada item.              | Criação da variável `valor_total_item`.                                  | Considerar o preço do produto junto com o valor do frete.                  | Criação de uma coluna somando `price` e `freight_value`.                                                                        |
