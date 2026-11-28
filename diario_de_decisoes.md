@@ -66,3 +66,24 @@ feature engineering;
 | 6  | Feature Engineering    | Necessidade de identificar avaliações negativas dos clientes.    | Criação da variável `avaliacao_baixa`.                                   | Identificar avaliações com notas iguais ou inferiores a 2.                 | Criação de uma coluna indicadora para avaliações baixas.                                                                        |
 | 7  | Feature Engineering    | Necessidade de analisar o peso do frete no preço dos produtos.   | Criação da variável `frete_percentual_preco`.                            | Calcular a porcentagem do preço que corresponde ao frete.                  | Criação de uma coluna com o percentual do frete em relação ao preço.                                                            |
 | 8  | Feature Engineering    | Necessidade de conhecer o custo total de cada item.              | Criação da variável `valor_total_item`.                                  | Considerar o preço do produto junto com o valor do frete.                  | Criação de uma coluna somando `price` e `freight_value`.                                                                        |
+
+---
+
+# Diário de Decisões — Frente 3: Pipeline de Pré-processamento e Reprodutibilidade
+
+**Projeto:** Ciência de Dados
+
+**Integrantes da Frente 3:** Marcos Vinycius Cavalcante
+
+**Data de início:** 26/11/2026
+
+**Última atualização:** 28/11/2026
+
+| Nº | Etapa                | Problema encontrado                                      | Decisão tomada                                      | Justificativa                                      | Impacto nos dados                                  |
+|----|----------------------|----------------------------------------------------------|-----------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
+| 1  | Reprodutibilidade    | Resultados poderiam variar entre execuções.              | Definição de uma semente fixa (`42`).               | Garantir maior consistência nos resultados.       | Facilita a repetição do processamento.             |
+| 2  | Controle de ambiente | Necessidade de registrar as versões das bibliotecas.     | Registro das versões do Pandas e NumPy.             | Documentar o ambiente utilizado.                  | Facilita a reprodução do projeto.                  |
+| 3  | Validação            | Necessidade de verificar a consistência da pipeline.     | Comparação de duas execuções.                       | Confirmar se os resultados são iguais.            | Verificação da reprodutibilidade.                  |
+| 4  | Integridade          | Possíveis alterações nas bases originais.                | Geração de hashes SHA-256.                          | Identificar mudanças nos dados.                   | Maior rastreabilidade das bases.                   |
+| 5  | Documentação         | Falta de registro das configurações utilizadas.          | Criação do arquivo `registro_reprodutibilidade.json`. | Registrar as condições de processamento.        | Facilita consultas e futuras reproduções.          |
+| 6  | Verificação de arquivos | Necessidade de conferir os arquivos finais.            | Verificação da existência dos arquivos.             | Garantir a disponibilidade dos arquivos da entrega.| Identificação de arquivos encontrados ou ausentes. |
